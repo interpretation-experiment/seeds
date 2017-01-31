@@ -8,7 +8,7 @@ The following classes of texts are gathered:
 Memorable / non-memorable quote pairs
 -------------------------------------
 
-In `cornell_movie_quotes_corpus/text_pairs.txt`. Extracted from [Danescu-Niculescu-Mizil (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following commands (using the Fish shell with virtualfish and Python 3.6+):
+In `cornell_movie_quotes_corpus/text_pairs.txt`. Extracted from [Danescu-Niculescu-Mizil et al. (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following commands (using the Fish shell with virtualfish and Python 3.6+):
 
 ```
 git submodule update --init  # to check out the spreadr submodule
