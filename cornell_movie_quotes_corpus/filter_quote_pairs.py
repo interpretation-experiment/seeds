@@ -73,12 +73,15 @@ def word_count(quote):
     return len(words)
 
 
-def valid_word_counts(pair):
+def valid_word_counts(minimum, pair):
     """Check if the movie-matched memorable and nonmemorable quotes in `pair`
-    have the same number of words."""
+    have the same number of words, >= `minimum`."""
 
     (memorable, nonmemorable) = pair
-    return word_count(memorable) == word_count(nonmemorable)
+    memorable_count = word_count(memorable)
+    nonmemorable_count = word_count(nonmemorable)
+    return ((memorable_count == nonmemorable_count) and
+            (memorable_count >= minimum))
 
 
 def valid_pair(validator, pair):
@@ -113,7 +116,7 @@ if __name__ == '__main__':
     spelling_validator = SpellingValidator('english')
     punctuation_validator = PunctuationValidator()
     kept = [pair for pair in pairs
-            if (valid_word_counts(pair) and
+            if (valid_word_counts(5, pair) and
                 valid_pair(spelling_validator, pair) and
                 valid_pair(punctuation_validator, pair))]
 
