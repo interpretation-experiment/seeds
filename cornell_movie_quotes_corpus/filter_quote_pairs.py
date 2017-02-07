@@ -76,7 +76,6 @@ def word_count(text):
 
 def normalize(text):
     """Remove double spaces in `text` (returning the normalized version)."""
-
     return DOUBLE_SPACES.sub(' ', text)
 
 
