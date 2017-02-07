@@ -75,8 +75,9 @@ def word_count(text):
 
 
 def normalize(text):
-    """Remove double spaces in `text` (returning the normalized version)."""
-    return DOUBLE_SPACES.sub(' ', text)
+    """Remove double spaces in `text` and strip it (returning the normalized
+    version)."""
+    return DOUBLE_SPACES.sub(' ', text.strip())
 
 
 def valid_word_counts(minimum, pair):
