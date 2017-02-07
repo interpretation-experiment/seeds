@@ -10,6 +10,7 @@ MOVIE_QUOTES_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.dirname(MOVIE_QUOTES_PATH)
 
 CHARACTER = re.compile(r'\w')
+DOUBLE_SPACES = re.compile(r' {2,}')
 
 SOURCE_QUOTE_PAIRS = os.path.join(
     MOVIE_QUOTES_PATH, 'moviequotes.memorable_nonmemorable_pairs.txt')
@@ -58,8 +59,8 @@ def save_pairs(pairs, filepath):
             f.write('\n')
 
 
-def word_count(quote):
-    """Count the number of words in `quote`.
+def word_count(text):
+    """Count the number of words in `text`.
 
     Uses the standard NLTK tokenizer, and ignores punctuation (i.e. tokens with
     no word-characters in them).
@@ -67,10 +68,16 @@ def word_count(quote):
     """
 
     words = [token
-             for sentence in nltk.tokenize.sent_tokenize(quote)
+             for sentence in nltk.tokenize.sent_tokenize(text)
              for token in nltk.tokenize.word_tokenize(sentence)
              if CHARACTER.search(token) is not None]
     return len(words)
+
+
+def normalize(text):
+    """Remove double spaces in `text` (returning the normalized version)."""
+
+    return DOUBLE_SPACES.sub(' ', text)
 
 
 def valid_word_counts(minimum, pair):
@@ -111,6 +118,9 @@ if __name__ == '__main__':
     print('Reading and filtering memorable and nonmemorable quotes from {}'
           .format(SOURCE_QUOTE_PAIRS))
     pairs = read_pairs(SOURCE_QUOTE_PAIRS)
+
+    # Remove bad formatting (double spaces for the moment)
+    pairs = [(normalize(first), normalize(second)) for (first, second) in pairs]
 
     # Filter through the pairs
     spelling_validator = SpellingValidator('english')
