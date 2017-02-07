@@ -119,7 +119,8 @@ if __name__ == '__main__':
     pairs = read_pairs(SOURCE_QUOTE_PAIRS)
 
     # Remove bad formatting (double spaces for the moment)
-    pairs = [(normalize(first), normalize(second)) for (first, second) in pairs]
+    pairs = [(normalize(first), normalize(second))
+             for (first, second) in pairs]
 
     # Filter through the pairs
     spelling_validator = SpellingValidator('english')
