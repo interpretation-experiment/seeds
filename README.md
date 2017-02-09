@@ -17,7 +17,7 @@ vf new -p (which python3) interpretation-experiment.seeds
 pip install -r spreadr/requirements.txt
 python -m nltk.downloader punkt averaged_perceptron_tagger
 
-pip install -r requirements.txt
+pip install -r pseudowords/requirements.txt
 python -m spacy.en.download all
 ```
 
@@ -44,3 +44,8 @@ The `filter_quote_pairs.py` script just takes the quote pairs from the movie quo
 In `popova/narratives.txt` and `popova/series-events.txt`. The first sentence in each of those files is taken from Forster (1927/1990), cited by Popova (2015: p. 31). The rest are all taken from Félix Fénéon, "Novels in Three Lines" (1906/2007), partly cited by Popova (2015: p. 38-39).
 
 The classification between narrative and non-narrative (series of events) is still quite rough (at least too rough to my liking). More passes with a closer reading of Popova (2015) will be necessary.
+
+
+### The above, with pseudowords
+
+TODO
