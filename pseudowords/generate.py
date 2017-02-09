@@ -1,7 +1,11 @@
 import re
 import sys
+import os
 
 import spacy
+from wuggy import generator
+from wuggy.generator import Generator
+from wuggy.plugins import orthographic_english
 
 
 DOUBLE_SPACES = re.compile(r' {2,}')
@@ -16,6 +20,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    LOW = '\033[2m'
 
 
 def span(token):
@@ -104,20 +109,60 @@ if __name__ == '__main__':
     # Use by feeding your input sentence on stdin:
     # echo "This is a sentence." | python pseudowords/generate.py
 
+    # Load spaCy
+    print(bcolors.LOW + 'Loading spaCy' + bcolors.ENDC)
     nlp = spacy.load('en')
     test_text_targets(nlp)
+
+    # Load Wuggy
+    print(bcolors.LOW + 'Loading Wuggy' + bcolors.ENDC)
+    wuggy = Generator()
+    wuggy_path = os.path.abspath(os.path.dirname(generator.__file__))
+    wuggy.data_path = os.path.join(wuggy_path, 'data')
+    wuggy.load(orthographic_english)
+    wuggy_options = wuggy.default_options()
+    pseudo_count = 10
 
     for line in sys.stdin:
         line = normalize(line)
         doc = nlp(line)
         targets = text_targets(doc)
 
+        # Generate all pseudowords
+        print(bcolors.LOW + 'Generating pseudowords' + bcolors.ENDC)
+        all_pseudowords = []
+        for target in targets:
+            segments = wuggy.lookup(target.orth_)
+            if segments is None:
+                # TODO: prompt for segmentation
+                raise ValueError
+            target_pseudowords = \
+                [w for (_, w) in wuggy.run(wuggy_options, segments, '')]
+            # Pad missing words with spaces
+            target_pseudowords += ([' ' * len(target.orth_)] *
+                                   (pseudo_count - len(target_pseudowords)))
+            all_pseudowords.append(target_pseudowords)
+
+        # Print the actual sentence with target words highlighted
         last_end = 0
-        for token in targets:
-            start, end = span(token)
-            assert token.orth_ == line[start:end]
+        for target in targets:
+            start, end = span(target)
+            assert target.orth_ == line[start:end]
             print(line[last_end:start], end='')
-            print(bcolors.BOLD + bcolors.OKGREEN + token.orth_ + bcolors.ENDC,
+            print(bcolors.BOLD + bcolors.OKGREEN + target.orth_ + bcolors.ENDC,
                   end='')
             last_end = end
         print(line[last_end:])
+
+        # Print candidate pseudowords for each target
+        for i in range(pseudo_count):
+            pseudowords = [target_pseudowords[i]
+                           for target_pseudowords in all_pseudowords]
+            last_end = 0
+            for target, pseudoword in zip(targets, pseudowords):
+                start, end = span(target)
+                assert end - start == len(pseudoword)
+                print(' ' * (start - last_end), end='')
+                print(bcolors.OKBLUE + pseudoword + bcolors.ENDC, end='')
+                last_end = end
+            print()

@@ -10,7 +10,7 @@ import codecs
 from fractions import Fraction
 from collections import defaultdict
 
-from bigramchain import BigramChain
+from .bigramchain import BigramChain
 
 
 class Generator:
