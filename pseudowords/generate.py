@@ -1,6 +1,9 @@
 import re
 import sys
 import os
+# The readline module works with `input` by simply importint it, so we disable
+# linting with flake8 for this line
+import readline  # noqa
 
 import spacy
 from wuggy import generator
@@ -106,8 +109,8 @@ def test_text_targets(nlp):
 
 
 if __name__ == '__main__':
-    # Use by feeding your input sentence on stdin:
-    # echo "This is a sentence." | python pseudowords/generate.py
+    # Use by giving your input sentences as arguments:
+    # python pseudowords/generate.py "This is a sentence." "And another."
 
     # Load spaCy
     print(bcolors.LOW + 'Loading spaCy' + bcolors.ENDC)
@@ -123,7 +126,7 @@ if __name__ == '__main__':
     wuggy_options = wuggy.default_options()
     pseudo_count = 10
 
-    for line in sys.stdin:
+    for line in sys.argv[1:]:
         line = normalize(line)
         doc = nlp(line)
         targets = text_targets(doc)
@@ -134,8 +137,9 @@ if __name__ == '__main__':
         for target in targets:
             segments = wuggy.lookup(target.orth_)
             if segments is None:
-                # TODO: prompt for segmentation
-                raise ValueError
+                segments = input("Couldn't determine a segmentation for '" +
+                                 bcolors.BOLD + target.orth_ + bcolors.ENDC +
+                                 "', please enter one yourself: ")
             target_pseudowords = \
                 [w for (_, w) in wuggy.run(wuggy_options, segments, '')]
             # Pad missing words with spaces
