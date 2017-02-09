@@ -1,4 +1,10 @@
+# Copyright (c) 2009-2012 Emmanuel Keuleers <emmanuel.keuleers@ugent.be>
+# Refactored parts of Wuggy 0.2.2b2 <http://crr.ugent.be/Wuggy>, adapted by
+# Sébastien Lerique <sl@mehho.net>
+
+
 import re
+
 
 double_letters = [u'eo', u'éo', u'èo', u'ẻo', u'ẽo', u'ẹo', u'êu', u'ếu',
                   u'ều', u'ểu', u'ễu', u'ệu', u'ia', u'ía', u'ìa', u'ỉa',
@@ -23,11 +29,3 @@ double_letter_pattern = '|'.join(double_letters)
 single_letter_pattern = '|'.join(single_letters)
 nucleuspattern = '%s|%s' % (double_letter_pattern, single_letter_pattern)
 oncpattern = re.compile('(.*?)(%s)(.*)' % nucleuspattern)
-
-# # small bit of test code
-# for pattern in double_letters + single_letters:
-#     m = oncpattern.match(u't{}t'.format(pattern))
-#     if m.group(2) == pattern:
-#         print('OK', pattern)
-#     else:
-#         print('ERROR', pattern)
