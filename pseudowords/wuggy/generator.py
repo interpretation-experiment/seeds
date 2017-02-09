@@ -88,7 +88,7 @@ class Generator:
 
         for i, line in enumerate(lines):
             if i % 1000 == 0:
-                self.set_status('Loading Word Lexicon', i/nlines*100)
+                self.set_status('Loading Word Lexicon', i / nlines*100)
 
             fields = line.strip().split('\t')
             word = fields[0]
@@ -100,7 +100,7 @@ class Generator:
             # which in Python 3 gives
             # TypeError: '>' not supported between instances of 'str' and 'int'
             # and in Python 2 always evaluates to True
-            if float(frequency_per_million) > cutoff:
+            if float(frequency_per_million) >= cutoff:
                 self.word_lexicon[word[0], len(word)].append(word)
 
         data_file.close()
@@ -131,7 +131,7 @@ class Generator:
             # which in Python 3 gives
             # TypeError: '>' not supported between instances of 'str' and 'int'
             # and in Python 2 always evaluates to True
-            if float(frequency_per_million) > cutoff:
+            if float(frequency_per_million) >= cutoff:
                 self.neighbor_lexicon.append(word)
 
         data_file.close()
