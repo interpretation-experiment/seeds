@@ -42,6 +42,15 @@ def normalize(text):
     return DOUBLE_SPACES.sub(' ', text.strip())
 
 
+def apply_shape(target, word):
+    """Return `word` shaped like `target` in terms of upper- and lowercase
+    letters."""
+
+    assert len(target) == len(word)
+    return ''.join([wc.upper() if tc.isupper() else wc
+                    for (tc, wc) in zip(target, word.lower())])
+
+
 def text_targets(doc):
     """List the tokens to be replaced by pseudowords in `doc`."""
 
@@ -135,13 +144,14 @@ if __name__ == '__main__':
         print(bcolors.LOW + 'Generating pseudowords' + bcolors.ENDC)
         all_pseudowords = []
         for target in targets:
-            segments = wuggy.lookup(target.orth_)
+            segments = wuggy.lookup(target.orth_.lower()).lower()
             if segments is None:
                 segments = input("Couldn't determine a segmentation for '" +
                                  bcolors.BOLD + target.orth_ + bcolors.ENDC +
-                                 "', please enter one yourself: ")
+                                 "', please enter one yourself: ").lower()
             target_pseudowords = \
-                [w for (_, w) in wuggy.run(wuggy_options, segments, '')]
+                [apply_shape(target.orth_, w)
+                 for (_, w) in wuggy.run(wuggy_options, segments, '')]
             # Pad missing words with spaces
             target_pseudowords += ([' ' * len(target.orth_)] *
                                    (pseudo_count - len(target_pseudowords)))
