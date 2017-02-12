@@ -175,6 +175,7 @@ if __name__ == '__main__':
     wuggy.load(orthographic_english)
     wuggy_options = wuggy.default_options()
     pseudo_count = 10
+    manual_segments = {}
     print_status('', args.out)
 
     for text in itertools.chain(args.sentences, args.reference):
@@ -188,7 +189,8 @@ if __name__ == '__main__':
         # Generate all pseudowords
         all_pseudowords = []
         for target in targets:
-            segments = wuggy.lookup(target.orth_.lower())
+            segments = (wuggy.lookup(target.orth_.lower())
+                        or manual_segments.get(target.orth_.lower()))
 
             while segments is None:
                 segments = input("Couldn't determine a segmentation for '" +
@@ -198,6 +200,8 @@ if __name__ == '__main__':
                     print("Your entry doesn't match the target word when "
                           "converting back. Please try again.")
                     segments = None
+                else:
+                    manual_segments[target.orth_.lower()] = segments
 
             target_pseudowords = \
                 [apply_shape(target.orth_, w)
