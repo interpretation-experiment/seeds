@@ -90,3 +90,7 @@ We use the default Wuggy settings to generate 10 suggestions for each target wor
 * When possible, keep the original word's inflection (verb conjugation, plural, noun-like, adverb-like, etc.)
 * If we can't do the above, try re-running Wuggy pseudoword generation (with the same settings) to see if the other random pseudowords allow it; if still not possible, go with one of those generated pseudowords anyway
 * Try to choose a pseudoword that doesn't evoke the original word, so simple sentences can't be inferred back
+
+Language being what it is, i.e. so complex, added to the fact we used realistic sentences (instead of hand-generated sentences that don't present any border cases), target selection and pseudoword generation is not flawless. If anything, it is sometimes a bit approximate: some words that should have been targets were likely overlooked, and some words that shouldn't have been replaced were replaced.
+
+I can only say the above rules reflect my attempt at replacing the *content words* of sentences to a reasonable extent, knowing that it's not always clear where content is in a given sentence.
