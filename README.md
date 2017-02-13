@@ -30,7 +30,7 @@ The following classes of texts are gathered:
 
 ### Memorable / non-memorable quote pairs
 
-In `cornell_movie_quotes_corpus/text_pairs.txt`. Extracted from [Danescu-Niculescu-Mizil et al. (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following command (after setting up the environment by following the instructions above):
+In `cornell_movie_quotes_corpus/text_pairs.txt` (full list of text pairs) and `cornell_movie_quotes_corpus/text_pairs_30.txt` (first 30 text pairs with no offensive words). Extracted from [Danescu-Niculescu-Mizil et al. (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following command (after setting up the environment by following the instructions above):
 
 ```
 python cornell_movie_quotes_corpus/filter_quote_pairs.py
@@ -48,4 +48,45 @@ The classification between narrative and non-narrative (series of events) is sti
 
 ### The above, with pseudowords
 
-TODO
+We also convert part of the above sources to jabberwocky sentences, using Keuleers' & Brysbaert's [Wuggy](http://crr.ugent.be/programs-data/wuggy). The generated sentences are in:
+
+* `cornell_movie_quotes_corpus/text_pairs_30-pseudowords.txt` (based on `cornell_movie_quotes_corpus/text_pairs_30.txt`)
+* `popova/narratives-pseudowords.txt`
+* `popova/series-events-pseudowords.txt`
+
+These were generated with the following two steps (in the environment set up above):
+
+```
+python pseudowords/generate.py --out pseudoword-suggestions.csv --reference reference-file.txt
+```
+
+to identify which words should be replaced in each sentence in `reference-file.txt` and have Wuggy generate suggestions for each of them. Then open the `csv` file in a spreadsheet editor, and for each sentence, do the actual pseudoword picking and replacement, removing all unused suggestions. This leaves you with jabberwocky sentences split into cells, and empty rows (where the suggestions were before removal). If the result is saved to `pseudoword-suggestions-processed.csv`, then:
+
+```
+python pseudowords/collect.py pseudoword-suggestions-processed.csv reference-pseudowords.txt
+```
+
+will collect all the jabberwocky sentences you generated into `reference-pseudowords.txt`, one sentence per line. This is how the jabberwocky files in `cornell_movie_quotes_corpus/` and `popova/` were created (those files were then re-spaced to show sentence pairs or improve readability).
+
+
+#### Note on choosing pseudowords
+
+The following word classes were targeted for replacement:
+
+* All nouns
+* All adjectives
+* Verbs that are not auxiliaries, modals, or copulas
+* Adverbs that were not negations
+
+With the following notes:
+
+* Don't replace any proper nouns or words starting with a capital letter
+* Repeated words or stems (e.g. a verb repeated but conjugated differently) were replaced with different pseudowords (i.e. the commonality is not maintained)
+* No words involved in contractions were replaced, except genitives. E.g. in "the *dog*'s *tail*", both *dog* and *tail* get replaced -- this is done by manually using Wuggy (as the `pseudowords/generate.py` script ignores all contractions) to generate suggestions for *dogs* (with the "s"), then picking pseudowords with a final "s" and separating off again.
+* Composed words (e.g. "mother-in-law") were replaced, similarly to genitives, by sticking all parts together and re-separating them in the generated pseudowords (this is also done manually, since `pseudowords/generate.py` considers composed words to be contractions and therefore ignores them)
+
+We used the default Wuggy settings to generate 10 suggestions for each target word. Picking a pseudoword among those 10 suggestions was done by trying to maintain the following:
+
+* When possible, keep the original word's inflection (verb conjugation, plural, noun-like, adverb-like)
+* If we can't do the above, try re-running Wuggy pseudoword generation (with the same settings) to see if the other random pseudowords allow it; if still not possible, go with one of those generated pseudowords
+* Try to choose a pseudoword that doesn't evoke the original word, so simple sentences can't be inferred back
