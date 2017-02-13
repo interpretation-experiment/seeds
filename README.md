@@ -48,13 +48,13 @@ The classification between narrative and non-narrative (series of events) is sti
 
 ### The above, with pseudowords
 
-We also convert part of the above sources to jabberwocky sentences, using Keuleers' & Brysbaert's [Wuggy](http://crr.ugent.be/programs-data/wuggy). The generated sentences are in:
+We also convert part of the above sources to jabberwocky sentences, using Keuleers & Brysbaert's [Wuggy](http://crr.ugent.be/programs-data/wuggy). The generated sentences are in:
 
 * `cornell_movie_quotes_corpus/text_pairs_30-pseudowords.txt` (based on `cornell_movie_quotes_corpus/text_pairs_30.txt`)
 * `popova/narratives-pseudowords.txt`
 * `popova/series-events-pseudowords.txt`
 
-These were generated with the following two steps (in the environment set up above):
+These are generated with the following two steps (in the environment set up above):
 
 ```
 python pseudowords/generate.py --out pseudoword-suggestions.csv --reference reference-file.txt
@@ -66,27 +66,27 @@ to identify which words should be replaced in each sentence in `reference-file.t
 python pseudowords/collect.py pseudoword-suggestions-processed.csv reference-pseudowords.txt
 ```
 
-will collect all the jabberwocky sentences you generated into `reference-pseudowords.txt`, one sentence per line. This is how the jabberwocky files in `cornell_movie_quotes_corpus/` and `popova/` were created (those files were then re-spaced to show sentence pairs or improve readability).
+will collect all the jabberwocky sentences you generated into `reference-pseudowords.txt`, one sentence per line. This is how the jabberwocky files in `cornell_movie_quotes_corpus/` and `popova/` are created (those files are then re-spaced to show sentence pairs or improve readability).
 
 
 #### Note on choosing pseudowords
 
-The following word classes were targeted for replacement:
+The following word classes are targeted for replacement:
 
 * All nouns
 * All adjectives
 * Verbs that are not auxiliaries, modals, or copulas
-* Adverbs that were not negations
+* Adverbs that are not negations
 
 With the following notes:
 
 * Don't replace any proper nouns or words starting with a capital letter
-* Repeated words or stems (e.g. a verb repeated but conjugated differently) were replaced with different pseudowords (i.e. the commonality is not maintained)
-* No words involved in contractions were replaced, except genitives. E.g. in "the *dog*'s *tail*", both *dog* and *tail* get replaced -- this is done by manually using Wuggy (as the `pseudowords/generate.py` script ignores all contractions) to generate suggestions for *dogs* (with the "s"), then picking pseudowords with a final "s" and separating off again.
-* Composed words (e.g. "mother-in-law") were replaced, similarly to genitives, by sticking all parts together and re-separating them in the generated pseudowords (this is also done manually, since `pseudowords/generate.py` considers composed words to be contractions and therefore ignores them)
+* Repeated words or stems (e.g. a verb repeated but conjugated differently) are replaced with different pseudowords (i.e. the commonality is not maintained)
+* No words involved in contractions are replaced, except genitives. E.g. in "the *dog*'s *tail*", both *dog* and *tail* get replaced -- this is done by manually using Wuggy (as the `pseudowords/generate.py` script ignores all contractions) to generate suggestions for *dogs* (with the "s"), then picking pseudowords with a final "s" and separating it off again.
+* Composed words (e.g. "mother-in-law") are replaced, similarly to genitives, by sticking all parts together and re-separating them in the generated pseudowords (this is also done manually, since `pseudowords/generate.py` considers composed words to be contractions and therefore ignores them)
 
-We used the default Wuggy settings to generate 10 suggestions for each target word. Picking a pseudoword among those 10 suggestions was done by trying to maintain the following:
+We use the default Wuggy settings to generate 10 suggestions for each target word. Picking a pseudoword among those 10 suggestions is done by trying to maintain the following:
 
-* When possible, keep the original word's inflection (verb conjugation, plural, noun-like, adverb-like)
-* If we can't do the above, try re-running Wuggy pseudoword generation (with the same settings) to see if the other random pseudowords allow it; if still not possible, go with one of those generated pseudowords
+* When possible, keep the original word's inflection (verb conjugation, plural, noun-like, adverb-like, etc.)
+* If we can't do the above, try re-running Wuggy pseudoword generation (with the same settings) to see if the other random pseudowords allow it; if still not possible, go with one of those generated pseudowords anyway
 * Try to choose a pseudoword that doesn't evoke the original word, so simple sentences can't be inferred back
