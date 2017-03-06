@@ -30,13 +30,20 @@ The following classes of texts are gathered:
 
 ### Memorable / non-memorable quote pairs
 
-In `cornell_movie_quotes_corpus/text_pairs.txt` (full list of text pairs) and `cornell_movie_quotes_corpus/text_pairs_30.txt` (first 30 text pairs with no offensive words). Extracted from [Danescu-Niculescu-Mizil et al. (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following command (after setting up the environment by following the instructions above):
+In `cornell_movie_quotes_corpus/text_pairs.txt`. Extracted from [Danescu-Niculescu-Mizil et al. (2012)](https://arxiv.org/abs/1203.6360)'s movie quotes dataset with the following command (after setting up the environment by following the instructions above):
 
 ```
 python cornell_movie_quotes_corpus/filter_quote_pairs.py
 ```
 
 The `filter_quote_pairs.py` script just takes the quote pairs from the movie quotes dataset where (1) spelling is recognised, (2) punctuation is recognised, (3) the movie-matched versions have the same number of words (excluding punctuation), and saves them to `text_pairs.txt`.
+
+From that, the following files are extracted:
+* `text_pairs_30.txt` -- the first 30 text pairs with no offensive words
+* `text_pairs-25random_10+w_noexpletives.txt` -- a random sample of 25 text pairs:
+  * with at least 10 words in each sentence.
+  * with no offensive words or connotations (excluding expletives and hand-checking),
+  * hand-checked so that memorable and non-memorable pairs have about the same number of characters (not only same number of words); pairs with length problems (only one) were replaced with a hand-picked pair satisfying the above conditions
 
 
 ### Minimal narratives / series of events
