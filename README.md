@@ -44,6 +44,7 @@ From that, the following files are extracted:
   * with at least 10 words in each sentence.
   * with no offensive words or connotations (excluding expletives and hand-checking),
   * hand-checked so that memorable and non-memorable pairs have about the same number of characters (not only same number of words); pairs with length problems (only one) were replaced with a hand-picked pair satisfying the above conditions
+* `text_pairs-15to16words.txt` -- the 27 text pairs with 15 or 16 words
 
 
 ### Minimal narratives / series of events
